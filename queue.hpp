@@ -1,5 +1,9 @@
-#include "fake_receiver.h"
+#pragma once
+
 #include <iostream>
+extern "C" {
+    #include "fake_receiver.h"
+}
 
 #define MAX_QUEUE_SIZE 10000
 
