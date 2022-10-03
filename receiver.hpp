@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+#include <ctime>
 #include "queue.hpp"
 
 extern "C" {
@@ -8,16 +10,16 @@ extern "C" {
 
 #define DUMP_LOG_FILENAME "candump.log"
 
+using namespace std;
+
 class Receiver {
     private: 
         MessageQueue *queue;
-        char message[MAX_CAN_MESSAGE_SIZE];
-        int received;
+        CanMessage message;
         void run();
     public:
         thread* thr;
         Receiver(MessageQueue *_queue);
         ~Receiver();
-        void (*log)(int*, char*);
         void start();
 };

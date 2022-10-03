@@ -2,22 +2,23 @@
 #include <condition_variable>
 #include <iostream>
 #include "queue.hpp"
+#include "common.hpp"
 
 extern "C" {
     #include "fake_receiver.h"
 }
 
 MessageQueue::MessageQueue() {
-    buffer = new char[MAX_CAN_MESSAGE_SIZE * MAX_QUEUE_SIZE];
+    _size = 0;
 }
 
-void MessageQueue::enqueue(char message[MAX_CAN_MESSAGE_SIZE]) {
+void MessageQueue::enqueue(CanMessage message) {
 
     unique_lock<mutex> lock(mtx);
 
     if (_size >= MAX_QUEUE_SIZE) throw new MessageQueueFullException();
 
-    strcpy(&buffer[((pointer + _size) % MAX_QUEUE_SIZE) * MAX_CAN_MESSAGE_SIZE], message);
+    buffer[((pointer + _size) % MAX_QUEUE_SIZE)] = message;
     _size++;
 
     mtx.unlock();
@@ -25,7 +26,7 @@ void MessageQueue::enqueue(char message[MAX_CAN_MESSAGE_SIZE]) {
     cv.notify_one();
 }
 
-char* MessageQueue::dequeue() {
+CanMessage* MessageQueue::dequeue() {
 
     while (size() == 0) {
         unique_lock<mutex> lock(mtx);
@@ -38,7 +39,7 @@ char* MessageQueue::dequeue() {
         _size--;
     }
 
-    return &buffer[((pointer - 1) % MAX_QUEUE_SIZE) * MAX_CAN_MESSAGE_SIZE];
+    return &buffer[((pointer - 1) % MAX_QUEUE_SIZE)];
 }
 
 uint16_t MessageQueue::size() {

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include "common.hpp"
+
 extern "C" {
     #include "fake_receiver.h"
 }
@@ -19,8 +21,8 @@ using namespace std;
 class MessageQueue {
     private:
         uint64_t pointer;
-        uint64_t _size = 0;
-        char *buffer;
+        uint64_t _size;
+        CanMessage buffer[MAX_QUEUE_SIZE];
         mutex mtx;
         condition_variable cv;
     public:
@@ -32,12 +34,12 @@ class MessageQueue {
         /**
          *  Add a message to the queue.
          */
-        void enqueue(char message[MAX_CAN_MESSAGE_SIZE]);
+        void enqueue(CanMessage message);
 
         /**
          *  Get and remove from queue the oldest message enqueued.
          */
-        char* dequeue();
+        CanMessage* dequeue();
 
         /**
          *  Get the number of messages in the queue.

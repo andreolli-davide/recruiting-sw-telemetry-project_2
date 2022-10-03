@@ -12,18 +12,15 @@ extern "C" {
 
 using namespace std;
 
-void _noLog(int* id, char* payload) {}
-
-void _debugLog(int* id, char* payload) {
-    cout << "Receiver -> id: " << *id << ", payload: " << payload << endl;
-}
+#ifdef DEBUG
+    void log(CanMessage *message) {  
+        cout << "Receiver -> data: " << message->data << endl;
+    }
+#else
+    void log(CanMessage *message) {}
+#endif
 
 Receiver::Receiver(MessageQueue *_queue) {
-
-    // Setup log function if the env DEBUG is setted
-    if(getenv("DEBUG")) 
-        log = &_debugLog;
-    else log = &_noLog;
 
     queue = _queue;
 
@@ -36,12 +33,17 @@ Receiver::Receiver(MessageQueue *_queue) {
 }
 
 void Receiver::run() {
+    int received;
+
     while (true) {
-        received = can_receive(message);
-        if (received != -1) {
-            queue->enqueue(message);
-            log(&received, message);
-        }
+        CanMessage* message = new CanMessage;
+        memset(message->data, 0, MAX_CAN_MESSAGE_SIZE);
+        received = can_receive(message->data);
+        message->length = received;
+        message->timestamp = chrono::system_clock::now();
+
+        queue->enqueue(*message);
+        log(message);
     }
 }
 

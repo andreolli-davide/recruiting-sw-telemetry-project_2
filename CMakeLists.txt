@@ -7,6 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-pthread -O0 -g -w")
 
+if($ENV{DEBUG})
+    add_definitions(-DDEBUG)
+endif()
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     # ${CMAKE_CURRENT_SOURCE_DIR}/other/dirs
@@ -20,6 +24,7 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/fake_receiver.c
     ${CMAKE_CURRENT_SOURCE_DIR}/queue.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/receiver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/parser.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
