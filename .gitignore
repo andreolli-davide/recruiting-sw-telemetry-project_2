@@ -1,3 +1,7 @@
 build/
 bin/
 .vscode/
+*_SESSION.txt
+
+# Personal script for build the software
+pbuild

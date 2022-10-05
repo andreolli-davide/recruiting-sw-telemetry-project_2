@@ -1,6 +1,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <iostream>
+#include <unistd.h>
 #include "queue.hpp"
 #include "common.hpp"
 
@@ -11,11 +12,11 @@ extern "C" {
 MessageQueue::MessageQueue() {
     _size = 0;
 }
-
 void MessageQueue::enqueue(CanMessage message) {
 
     unique_lock<mutex> lock(mtx);
 
+    // Check if queue is full
     if (_size >= MAX_QUEUE_SIZE) throw new MessageQueueFullException();
 
     buffer[((pointer + _size) % MAX_QUEUE_SIZE)] = message;

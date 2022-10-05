@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include "queue.hpp"
 #include "receiver.hpp"
+#include "parser.hpp"
 
 using namespace std;
 
@@ -11,11 +12,14 @@ using namespace std;
 
 MessageQueue queue;
 Receiver r(&queue);
+Parser p(&queue);
 
 int main(void){
 
-    // Start receiver thread
+    // Start receiver and parser thread
     r.start();
-    r.thr->join();
+    p.start();
+
+    p.join();
     return 0;
 }

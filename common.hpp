@@ -1,6 +1,6 @@
 #pragma once
 
-#include <chrono>
+#include <ctime>
 
 extern "C" {
     #include "fake_receiver.h"
@@ -10,6 +10,6 @@ using namespace std;
 
 typedef struct CanMessage {
     int length;
-    chrono::time_point<chrono::system_clock> timestamp;
+    time_t timestamp;
     char data[MAX_CAN_MESSAGE_SIZE];
 } CanMessage;

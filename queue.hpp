@@ -1,12 +1,14 @@
 #pragma once
 
-#include <iostream>
 #include "common.hpp"
+#include <thread>
+#include <exception>
 
 extern "C" {
     #include "fake_receiver.h"
 }
 
+// sizeof CanMessage = 20 bytes --> memory space used by queue: 20 bytes * MAX_QUEUE_SIZE.
 #define MAX_QUEUE_SIZE 10000
 
 using namespace std;
@@ -27,7 +29,7 @@ class MessageQueue {
         condition_variable cv;
     public:
         /**
-         *  Class constructor, it doesn't need any.
+         *  Class constructor, it doesn't need any parameter.
          */
         MessageQueue();
 
@@ -51,7 +53,6 @@ class MessageQueue {
  *  MessageQueueFullException can be throwed by MessageQueue's method enqueue while inserting an element into a full queue.
  */
 class MessageQueueFullException : public exception {
-    uint64_t size = MAX_QUEUE_SIZE;
     public:
         string getMessage();
 };
