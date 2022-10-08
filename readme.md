@@ -1,6 +1,8 @@
 # Project 2
 
-> ⚠️ This document is fairly technical to maintain brevity, if you have **any** questions ask your recruiter or come visit us at floor -2 of Povo 2.
+The system is based on 2 threads. One receive the data from CAN (in test mode from fake_receiver.h, in production from a CAN interface (obviously it would need to be implemented)) and places them in a queue, where the second thread dequeues messages and make some stuff with it, like logging data on the file and calculating statistics. I made an architecture like this because CAN messages can arrive in less time then the software takes for parse them, maybe causing problems. Check `examples /` directory for the output of the software in run mode.
+
+------------------------------------------------
 
 ## Abstract
 
