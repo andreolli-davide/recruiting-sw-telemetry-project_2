@@ -2,6 +2,7 @@ build/
 bin/
 .vscode/
 *_SESSION.txt
+*_STATISTICS.csv
 
 # Personal script for build the software
 pbuild

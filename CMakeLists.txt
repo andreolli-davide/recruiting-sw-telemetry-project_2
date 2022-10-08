@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-pthread -O0 -g -w")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-pthread -O0 -g -w -Wall")
 
 if($ENV{DEBUG})
     add_definitions(-DDEBUG)
@@ -25,6 +25,7 @@ add_library(
     ${CMAKE_CURRENT_SOURCE_DIR}/queue.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/receiver.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/parser.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/statistics.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

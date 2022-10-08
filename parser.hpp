@@ -3,6 +3,7 @@
 #include <fstream>
 #include "queue.hpp"
 #include "common.hpp"
+#include "statistics.hpp"
 
 extern "C" {
     #include "fake_receiver.h"
@@ -37,6 +38,7 @@ class Parser {
          */
         ofstream file;
 
+
         char filename[24];
         thread* thr;
         
@@ -44,6 +46,8 @@ class Parser {
          *  run method does the work of the parser. It can called only by the public start() method.
          */
         void run();
+
+        Statistics stats;
     public:
 
         /**

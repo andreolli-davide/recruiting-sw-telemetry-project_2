@@ -1,13 +1,10 @@
 #include <iostream>
 #include <thread>
 #include <stdlib.h>
-#include <stdio.h>
-#include <chrono>
 
 #include "parser.hpp"
 #include "queue.hpp"
-
-#include "cstring"
+#include "statistics.hpp"
 
 using namespace std;
 
@@ -53,9 +50,13 @@ void Parser::_idle(CanMessage *message) {
     // Check the first part of the data (0A0) before checking the entire string
     if (strncmp(message->data, "0A0", 3) == 0 && 
         (strncmp(&message->data[4], "6601", 4) == 0 || strncmp(&message->data[4], "FF01", 4) == 0)) {
+                    
             action = &Parser::_run;
             sprintf(filename, "./%d_SESSION.txt", message->timestamp);
             file.open(filename);
+
+            stats.init(message->timestamp);
+            stats.report("0A0", message->timestamp);
     }
 
     log("idle", message->data);
@@ -65,9 +66,16 @@ void Parser::_run(CanMessage *message) {
 
     file << message->timestamp << " " << message->data << endl;
     
+    // Add the message to statistics
+    char id[3];
+    strncpy(id, message->data, 3);
+
+    stats.report(id, message->timestamp);
+    
     // Check the first part of the data (0A0) before checking the entire string
-    if (strncmp(message->data, "0A0", 3) == 0 && strncmp(&message->data[4], "66FF", 4)) {
+    if (strncmp(message->data, "0A0", 3) == 0 && strncmp(&message->data[4], "66FF", 4) == 0) {
         file.close();
+        stats.build();
         action = &Parser::_idle;
         return;
     }
