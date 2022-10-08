@@ -9,7 +9,7 @@ using namespace std;
 
 typedef struct Stats {
     char id[3];
-    int count = 0;
+    int count;
     time_t firstReport;
     time_t lastReport;
 } IdStats;

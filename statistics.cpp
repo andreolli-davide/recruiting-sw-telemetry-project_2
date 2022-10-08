@@ -33,7 +33,7 @@ void Statistics::report(char *id, time_t timestamp) {
     stpncpy((char*)(stats[count].id), id, 3);
     stats[count].firstReport = timestamp;
     stats[count].lastReport = timestamp;
-    stats[count].count++;
+    stats[count].count = 1;
     count++;
 }
 
@@ -56,6 +56,6 @@ void Statistics::build() {
 
 void Statistics::init(time_t timestamp) {
     // Create filename
-    sprintf(filename, "./%d_STATISTICS.csv", timestamp);
+    sprintf(filename, "./%ld_STATISTICS.csv", timestamp);
     count = 0;
 }

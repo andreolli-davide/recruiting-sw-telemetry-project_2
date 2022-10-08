@@ -50,10 +50,11 @@ void Parser::_idle(CanMessage *message) {
     // Check the first part of the data (0A0) before checking the entire string
     if (strncmp(message->data, "0A0", 3) == 0 && 
         (strncmp(&message->data[4], "6601", 4) == 0 || strncmp(&message->data[4], "FF01", 4) == 0)) {
-                    
+
             action = &Parser::_run;
             sprintf(filename, "./%d_SESSION.txt", message->timestamp);
             file.open(filename);
+            file << message->timestamp << " " << message->data << endl;
 
             stats.init(message->timestamp);
             stats.report("0A0", message->timestamp);
