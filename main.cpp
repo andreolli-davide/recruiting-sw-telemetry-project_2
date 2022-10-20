@@ -20,6 +20,10 @@ int main(void){
     r.start();
     p.start();
 
+    r.join();
+
+    // When receiver gets -1 code and terminates itself
+    p.setReturnOnEmpty();
     p.join();
     return 0;
 }

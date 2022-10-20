@@ -2,6 +2,7 @@
 
 #include <ctime>
 #include <fstream>
+#include <unordered_map>
 
 #define MAX_STATISTICS_ARRAY_SIZE 1000
 
@@ -24,7 +25,7 @@ class Statistics {
          */
         char filename[28];
         uint count;
-        Stats stats[MAX_STATISTICS_ARRAY_SIZE];
+        unordered_map<uint16_t, Stats> stats;
     public:
         Statistics();
         ~Statistics();
@@ -37,7 +38,7 @@ class Statistics {
         /**
          *  report add to statistics the message id.
          */
-        void report(char* id, time_t timestamp);
+        void report(uint16_t id, char *_id, time_t timestamp);
 
         /**
          *  build creates the csv file with stored statistics.

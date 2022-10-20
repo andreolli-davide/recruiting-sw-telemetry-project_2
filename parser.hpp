@@ -21,6 +21,8 @@ class Parser {
          */
         void _run(CanMessage *message);
 
+        void (*returnOnEmptyQueue)(CanMessage *message); 
+
         MessageQueue *queue;
 
         /**
@@ -38,16 +40,23 @@ class Parser {
          */
         ofstream file;
 
-
+        /**
+         *  session filename
+         */
         char filename[24];
-        thread* thr;
+
+        thread *thr;
         
         /**
          *  run method does the work of the parser. It can called only by the public start() method.
          */
         void run();
 
+        /**
+         *  Stats object
+         */
         Statistics stats;
+
     public:
 
         /**
@@ -69,4 +78,6 @@ class Parser {
          *  Join the Parser thread with function caller thread.
          */
         void join();
+
+        void setReturnOnEmpty();
 };

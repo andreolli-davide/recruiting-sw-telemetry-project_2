@@ -27,6 +27,7 @@ class MessageQueue {
         CanMessage buffer[MAX_QUEUE_SIZE];
         mutex mtx;
         condition_variable cv;
+        bool stop;
     public:
         /**
          *  Class constructor, it doesn't need any parameter.
@@ -47,6 +48,8 @@ class MessageQueue {
          *  Get the number of messages in the queue.
          */
         uint16_t size();
+
+        void stopDequeue();
 };
 
 /**

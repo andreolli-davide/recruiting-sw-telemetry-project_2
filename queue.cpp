@@ -11,6 +11,7 @@ extern "C" {
 
 MessageQueue::MessageQueue() {
     _size = 0;
+    stop = false;
 }
 void MessageQueue::enqueue(CanMessage message) {
 
@@ -29,8 +30,10 @@ void MessageQueue::enqueue(CanMessage message) {
 
 CanMessage* MessageQueue::dequeue() {
 
-    while (size() == 0) {
+    while (size() == 0 && !stop) {
         unique_lock<mutex> lock(mtx);
+        if (stop)
+            return nullptr;
         cv.wait(lock);
     }
 
@@ -47,6 +50,14 @@ uint16_t MessageQueue::size() {
 
     unique_lock<mutex> lock(mtx);
     return _size;
+}
+
+void MessageQueue::stopDequeue() {
+    stop = true;
+    if (_size == 0) {
+        mtx.unlock();
+        cv.notify_one();
+    }
 }
 
 string MessageQueueFullException::getMessage() {

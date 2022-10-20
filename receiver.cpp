@@ -37,12 +37,14 @@ void Receiver::run() {
 
     while (true) {
         CanMessage* message = new CanMessage;
+
         memset(message->data, 0, MAX_CAN_MESSAGE_SIZE);
         received = can_receive(message->data);
         
         // if can_message returns an error message reciver must go down.
-        if (received == -1) return;
-        
+        if (received == -1) 
+            return;
+
         message->length = received;
         message->timestamp = time(nullptr);
 

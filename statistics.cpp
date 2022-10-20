@@ -19,22 +19,19 @@ Statistics::Statistics() {
     uint count = 0;
 }
 
-void Statistics::report(char *id, time_t timestamp) {
+void Statistics::report(uint16_t id, char *_id, time_t timestamp) {
 
-    for (int i = 0; i < count; i++) {
-        // Check if id already exists
-        if(strncmp(id, stats[i].id, 3) == 0) {
-            stats[i].lastReport = timestamp;
-            stats[i].count++;
-            return;
-        }
+    if (stats.contains(id)) {
+        stats[id].lastReport = timestamp;
+        stats[id].count++;
+        return;
     }
-    // if id has never been inserted before
-    stpncpy((char*)(stats[count].id), id, 3);
-    stats[count].firstReport = timestamp;
-    stats[count].lastReport = timestamp;
-    stats[count].count = 1;
-    count++;
+
+    Stats idStats;
+    idStats.firstReport = timestamp;
+    idStats.lastReport = timestamp;
+    idStats.count = 1;
+    stats.insert({id, idStats});
 }
 
 Statistics::~Statistics() {
@@ -47,8 +44,13 @@ void Statistics::build() {
     // Write csv headers
     file << "id,number_of_messages,mean_time" << endl;
 
-    for (int i = 0; i < count; i++) {
-        file << stats[i].id << "," << stats[i].count << "," << ((float)(stats[i].lastReport - stats[i].firstReport)) / count << endl;
+    char idString[3];
+
+    for (auto id = stats.begin(); id != stats.end(); ++id) {
+        sprintf(idString, "%02X", id->first);
+        int a = id->first;
+        char *b = id->second.id;
+        file << idString << "," << id->second.count << "," << ((float)(id->second.lastReport - id->second.firstReport)) / id->second.count << endl;
     }
 
     file.close();
